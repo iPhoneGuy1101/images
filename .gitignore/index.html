@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			.spinner{
+				transform-orgin: center;
+				transform: rotate(0deg);
+				width: 8%;
+				height: 8%;
+				padding: 2%;
+				margin: 2%;
+			}
+		</style>
+		<script>
+			var pc = !(navigator.userAgent.match(/Android/i) || navigator.userAgent.match(/BlackBerry/i) || navigator.userAgent.match(/iPhone|iPad|iPod/i) || navigator.userAgent.match(/Opera Mini/i) || navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i));
+			var Spinner = function(elem){
+				this.spinner = elem;
+				this.vel = 3;
+				this.rot = 45;
+				this.size = 96;
+				this.incVel = 5;
+				this.decSpeed = 0.2;
+				this.click = function(e){
+					if(e != null) e.preventDefault();
+					if(pc) this.vel+=this.incVel;
+					if(!pc)this.vel = 0;
+				};
+				this.touchmove = function(e){
+					if(e != null) e.preventDefault();
+					this.vel+=this.incVel/8;
+				}
+				this.update = function(){
+					this.rot+=this.vel;
+					if(this.vel > this.decSpeed) this.vel-=this.decSpeed;
+					if(this.vel < this.decSpeed) this.vel = 0;
+					this.spinner.style.transform = "rotate("+this.rot+"deg)";
+				};
+				this.init = function(){
+					this.spinner.addEventListener("touchstart", function(e){e.preventDefault()});
+					this.spinner.addEventListener("touchmove", this.touchmove.bind(this));
+					this.spinner.addEventListener("touchend", function(e){e.preventDefault()});
+					this.spinner.addEventListener("click", this.click.bind(this));
+					return this;
+				};
+			}, spinners = [], draw = function(){
+				for(var s = 0; s < spinners.length; s++){
+					spinners[s].update();
+				}
+				setTimeout(draw,1000/50);
+			};
+			window.onload = function(){
+				var sp = document.getElementsByClassName("spinner");
+				for(var s = 0; s < sp.length; s++){
+					spinners.push(new Spinner(sp[s]));
+					spinners[s].init();
+				};
+				draw();
+			};
+		</script>
+	</head>
+	<body>
+		<img src="https://iphoneguy1101.github.io/images/spinner_black.png" class="spinner"></img>
+		<img src="https://iphoneguy1101.github.io/images/spinner_black.png" class="spinner"></img>
+		<img src="https://iphoneguy1101.github.io/images/spinner_black.png" class="spinner"></img>
+	</body>
+</html>
